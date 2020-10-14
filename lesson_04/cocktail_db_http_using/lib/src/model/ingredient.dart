@@ -17,18 +17,36 @@
 ///   }
 ///  ```
 ///
-class Ingredient {
-  final String id;
-  final String name;
-  final String description;
-  final String ingredientType;
-  final bool isAlcoholic;
+///
 
-  Ingredient({
-    this.id,
-    this.name,
-    this.description,
-    this.ingredientType,
-    this.isAlcoholic,
-  });
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
+import 'package:built_value/serializer.dart';
+import 'package:cocktaildbhttpusing/src/serializers/serializers.dart';
+
+part 'ingredient.g.dart';
+
+abstract class Ingredient implements Built<Ingredient, IngredientBuilder> {
+
+  String get id;
+  String get name;
+  String get description;
+  String get ingredientType;
+  @nullable
+  bool get isAlcoholic;
+  @nullable
+  String get abv;
+
+  Ingredient._();
+  factory Ingredient([void Function(IngredientBuilder) updates]) = _$Ingredient;
+
+  Map<String, dynamic> toJson() {
+    return serializers.serializeWith(Ingredient.serializer, this);
+  }
+
+  static Ingredient fromJson(Map<String, dynamic> json) {
+    return serializers.deserializeWith(Ingredient.serializer, json);
+  }
+
+  static Serializer<Ingredient> get serializer => _$ingredientSerializer;
 }
